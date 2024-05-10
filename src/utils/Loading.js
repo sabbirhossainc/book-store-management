@@ -2,6 +2,16 @@ const Loading = ({ times }) => {
   return (
     <div className="lws-bookContainer">
       {/* <!-- Loading Card  --> */}
+      <div className="book-card">
+        <div className=" font-semibold text-xl mt-2 ml-2">
+          Free server!!! 🥲
+          <hr />
+          Please wait... 5s-10s for start server.
+          <br />
+          Thank you!
+          <hr />
+        </div>
+      </div>
       {Array.from({ length: times }).map((_, index) => (
         <div className="book-card" key={index}>
           {/* heading */}
