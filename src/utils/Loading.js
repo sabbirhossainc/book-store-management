@@ -6,8 +6,7 @@ const Loading = ({ times }) => {
         <div className=" font-semibold text-xl mt-2 ml-2">
           Free server!!! 🥲
           <hr />
-          Please wait... 5s-10s for start server.
-          <br />
+          Please wait... less than 60s for start server or reload untill it start.
           Thank you!
           <hr />
         </div>

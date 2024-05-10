@@ -7,6 +7,8 @@ import fetchBooks from "../../redux/books/thunk/fetchBooks";
 
 const BookForm = () => {
   const modes = useSelector((state) => state.modes);
+  const filters = useSelector((state) => state.filters);
+  const { loading } = filters;
   const [bookData, setBookData] = useState({});
   const [bookToUpdate, setBookToUpdate] = useState({});
   const dispatch = useDispatch();
@@ -51,7 +53,10 @@ const BookForm = () => {
 
   const handelSubmit = (e) => {
     e.preventDefault();
-    dispatch(addBookToDb(bookData));
+    // check loading before adding new book;
+    if (loading === false) {
+      dispatch(addBookToDb(bookData));
+    }
     resetForm();
   };
 
