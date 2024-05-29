@@ -1,33 +1,26 @@
-import { useDispatch, useSelector } from "react-redux";
-import BookCard from "./BookCard";
-import BookForm from "./BookForm";
-import BookNav from "./BookNav";
-import { useEffect } from "react";
-import fetchBooks from "../../redux/books/thunk/fetchBooks";
-import Loading from "../../utils/Loading";
+import { useSelector } from "react-redux";
+import { useGetBooksQuery } from "../../features/api/api";
+import BookCard from "../Book/BookCard";
+import BookNav from "../Book/BookNav";
+import Loading from '../../ui/Loading'
 
 const Home = () => {
-  const books = useSelector((state) => state.books);
-  const filters = useSelector((state) => state.filters);
-  const { status, search, loading } = filters;
-  const dispatch = useDispatch();
+  const { data: books, isLoading, isError, error } = useGetBooksQuery();
+  const { status, search, mode } = useSelector((state) => state.filters);
 
-  useEffect(() => {
-    dispatch(fetchBooks);
-  }, [dispatch]);
-
+  // filter by status
   const filterByStatus = (book) => {
     switch (status) {
       case "All":
         return true;
       case "Featured":
         return book.featured;
-
       default:
         return true;
     }
   };
 
+  // filter by search
   const filterBySearch = (book) => {
     const targetBook = book.name.toLowerCase().includes(search);
     if (targetBook) {
@@ -35,36 +28,36 @@ const Home = () => {
     }
   };
 
-  const checkFilter = books
-    ?.filter(filterBySearch)
-    ?.filter(filterByStatus).length;
+  // decide what to render
+  let content = null;
 
+  if (isLoading) {
+    content = <Loading times={5}/>;
+  }
+  if (!isLoading && isError) {
+    content = (
+      <div>
+        {error}
+        {"!"}
+      </div>
+    );
+  }
+  if (!isLoading && !isError && books?.length === 0) {
+    content = <div>No books found!</div>;
+  }
+  if (!isLoading && !isError && books?.length > 0) {
+    content = books
+      ?.filter(filterByStatus)
+      ?.filter(filterBySearch)
+      ?.map((book, index) => <BookCard key={index} book={book} mode={mode} />);
+  }
   return (
-    <main className="py-12 2xl:px-6">
-      <div className="container grid xl:grid-cols-[auto_350px] 2xl:grid-cols-[auto_400px] gap-4 2xl:gap-8">
-        <div className="order-2 xl:-order-1">
-          {/* Books nav */}
-          <BookNav status={status} />
-          {/* loading */}
-          {loading === true ? <Loading times={5} /> : null}
-          {/* Books */}
-          {books?.length > 0 && checkFilter > 0 ? (
-            <div className="lws-bookContainer">
-              {books
-                ?.filter(filterByStatus)
-                ?.filter(filterBySearch)
-                .map((book) => (
-                  <BookCard book={book} key={book.id} />
-                ))}
-            </div>
-          ) : (
-            <div className="lws-bookContainer">
-              {loading === false ? "No book found! But you can add." : null}
-            </div>
-          )}
-        </div>
-        <div className="lws-formContainer">
-          <BookForm />
+    <main className="py-12 px-6 2xl:px-6 container">
+      <div className="order-2 xl:-order-1">
+        <BookNav status={status} />
+        <div className="space-y-6 md:space-y-0 md:grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* <!-- Card 1 --> */}
+          {content}
         </div>
       </div>
     </main>

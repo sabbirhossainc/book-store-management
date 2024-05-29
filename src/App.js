@@ -1,25 +1,25 @@
-import { Provider } from "react-redux";
-import store from "./redux/store";
-import Route from "./utils/Route";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import Header from "./components/Header";
 import Home from "./components/Home/Home";
+import AddBook from "./components/Add/AddBook";
+import EditBook from "./components/Edit/EditBook";
 import Wishlist from "./components/Wishlist/Wishlist";
-import Collection from "./components/Collection/Collection";
 
-export default function App() {
+function App() {
   return (
-    <Provider store={store}>
-      <Header />
-      <Route path="/">
-        <Home />
-      </Route>
-      <Route path="/wishlist">
-        <Wishlist />
-      </Route>
-      <Route path="/collection">
-        <Collection />
-      </Route>
-    </Provider>
+    <div className="App">
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/addbook" element={<AddBook />} />
+          <Route path="/editbook/:bookId" element={<EditBook />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
+
+export default App;

@@ -1,59 +1,55 @@
-import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useMatch, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
-import CurrentPath from "../utils/CurrentPath";
-import Link from "../utils/Link";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { searchQuery } from "../redux/filters/actions";
+import { searched } from "../features/filters/filterSlice";
 
 const Header = () => {
-  const path = CurrentPath.apply().split("/")[1];
-  const filters = useSelector((state) => state.filters);
-  const { search } = filters;
+  const path = useLocation().pathname;
+  const { search } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
-  const searchRef = useRef("");
+
+  //location
+  const match = useMatch("/");
+  const navigate = useNavigate();
 
   const [searchText, setSearchText] = useState(search);
 
   const handleSearch = (e) => {
     e.preventDefault();
     setSearchText(e.target.value);
+    if (!match) {
+      navigate("/");
+    }
   };
-  
+
   useEffect(() => {
-    searchRef.current.value = searchText;
-    dispatch(searchQuery(searchText));
-  }, [searchText,dispatch]);
+    dispatch(searched(searchText));
+  }, [searchText, dispatch]);
 
   return (
     <nav className="py-4 2xl:px-6">
       <div className="container flex items-center justify-between">
-        <a href="/">
-        <img src={logo} alt="logo" width="150px" className="object-contain" />
-        </a>
+        <Link to={"/"}>
+          <img src={logo} alt="" width="150px" className="object-contain" />
+        </Link>
 
         <ul className="hidden md:flex items-center space-x-6">
-          <Link href={"/"}>
-            <li className={`cursor-pointer ${path === "" && "font-semibold"}`}>
-              Book Store
-            </li>
+          <Link
+            className={`cursor-pointer ${path === "/" && "font-semibold"}`}
+            to={"/"}
+            id="lws-bookStore"
+          >
+            <li>Book Store</li>
           </Link>
-          <Link href={"/wishlist"}>
-            <li
-              className={`cursor-pointer ${
-                path === "wishlist" && "font-semibold"
-              }`}
-            >
-              Wishlist
-            </li>
-          </Link>
-          <Link href={"/collection"}>
-            <li
-              className={`cursor-pointer ${
-                path === "collection" && "font-semibold"
-              }`}
-            >
-              My Collection
-            </li>
+          <Link
+            className={`cursor-pointer ${
+              path === "/addbook" && "font-semibold"
+            }`}
+            to={"/addbook"}
+            id="lws-addBook"
+          >
+            <li>Add Book</li>
           </Link>
         </ul>
 
@@ -75,9 +71,9 @@ const Header = () => {
               type="text"
               placeholder="Filter books..."
               className="search"
-              id="lws-searchBook"
-              ref={searchRef}
-              onChange={(e) => handleSearch(e)}
+              id="lws-search"
+              value={searchText}
+              onChange={handleSearch}
             />
           </div>
         </form>
