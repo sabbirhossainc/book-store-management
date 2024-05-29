@@ -2,7 +2,7 @@
 
 This site provides a minimal setup to get a book store based on a real server(free) and can be add book, update book, delete book afterwards.
 
-## Live at [Book store app](https://book-store-manage.netlify.app/) 
+## deprecated version
 
 # React + Redux
 
