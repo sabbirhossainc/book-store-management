@@ -17,6 +17,7 @@ const BookNav = ({ status }) => {
   };
 
   useEffect(() => {
+    console.log(deleteBook);
     const deleteMessage = document.getElementById("delete-message");
     if (isSuccess) {
       setTimeout(() => {
