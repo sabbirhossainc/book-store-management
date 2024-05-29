@@ -1,11 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { statusChanged } from "../../features/filters/filterSlice";
 import { useEffect } from "react";
-import { apiSlice } from "../../features/api/api";
+import { useDeleteBookMutation } from "../../features/api/api";
 
 const BookNav = ({ status }) => {
   //
-  const { isLoading, isError, isSuccess, error } = useSelector(apiSlice.endpoints.deleteBook.select());
+  const [deleteBook, { isLoading, isError, isSuccess, error }] =
+    useDeleteBookMutation({
+      fixedCacheKey: "shared-update-post",
+    });
 
   const dispatch = useDispatch();
 
@@ -13,9 +16,14 @@ const BookNav = ({ status }) => {
     dispatch(statusChanged(param));
   };
 
-  useEffect(()=>{
-    console.log(isError,isSuccess,isLoading);
-  })
+  useEffect(() => {
+    const deleteMessage = document.getElementById("delete-message");
+    if (isSuccess) {
+      setTimeout(() => {
+        deleteMessage.classList.add("hidden");
+      }, 3000);
+    }
+  });
 
   return (
     <div className="flex items-center justify-between mb-12">
@@ -23,8 +31,8 @@ const BookNav = ({ status }) => {
       {isLoading && <div>Loading...</div>}
       {isError && <div className="flex items-center">{error}</div>}
       {isSuccess && (
-        <div className="flex items-center success">
-          Book id:{""} Deleted Successfully!
+        <div className="flex justify-center success" id="delete-message">
+          Book Deleted Successfully!
         </div>
       )}
       <div className="flex items-center space-x-4">

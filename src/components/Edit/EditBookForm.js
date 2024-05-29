@@ -101,6 +101,7 @@ const EditBookForm = ({ book }) => {
             className="text-input"
             type="number"
             name="price"
+            min="0"
             id="lws-price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
@@ -148,7 +149,7 @@ const EditBookForm = ({ book }) => {
       </button>
       {isError && <div className="flex items-center">{error}</div>}
       {isSuccess && (
-        <div className="flex items-center success">
+        <div className="flex justify-center success">
           Book Updated Successfully!
         </div>
       )}

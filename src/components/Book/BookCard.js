@@ -3,7 +3,9 @@ import Star from "../../ui/Star";
 import { useDeleteBookMutation } from "../../features/api/api";
 const BookCard = ({ book }) => {
   const { id, name, author, thumbnail, price, rating, featured } = book;
-  const [deleteBook] = useDeleteBookMutation();
+  const [deleteBook] = useDeleteBookMutation({
+    fixedCacheKey: "shared-update-post",
+  });
 
   const handleDelete = () => {
     id && deleteBook(id);
